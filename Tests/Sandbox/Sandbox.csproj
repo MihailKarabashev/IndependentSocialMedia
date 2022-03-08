@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <CodeAnalysisRuleSet>..\..\Rules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="..\..\stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommandLineParser" Version="2.8.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="5.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="5.0.6" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.312" PrivateAssets="all">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\IndependentSocialApp.Common\IndependentSocialApp.Common.csproj" />
+    <ProjectReference Include="..\..\Data\IndependentSocialApp.Data.Common\IndependentSocialApp.Data.Common.csproj" />
+    <ProjectReference Include="..\..\Data\IndependentSocialApp.Data.Models\IndependentSocialApp.Data.Models.csproj" />
+    <ProjectReference Include="..\..\Data\IndependentSocialApp.Data\IndependentSocialApp.Data.csproj" />
+    <ProjectReference Include="..\..\Services\IndependentSocialApp.Services.Data\IndependentSocialApp.Services.Data.csproj" />
+    <ProjectReference Include="..\..\Services\IndependentSocialApp.Services.Mapping\IndependentSocialApp.Services.Mapping.csproj" />
+    <ProjectReference Include="..\..\Services\IndependentSocialApp.Services.Messaging\IndependentSocialApp.Services.Messaging.csproj" />
+    <ProjectReference Include="..\..\Services\IndependentSocialApp.Services\IndependentSocialApp.Services.csproj" />
+  </ItemGroup>
+
+</Project>
