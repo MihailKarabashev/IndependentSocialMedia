@@ -13,6 +13,9 @@
 
             public const string PasswordDoNotMatch = "Password and confirm password fields do not match";
 
+            public const string UserNotFound = "User with this email is not found";
+
+            public const string IncorrectEmailOrPassword = "Email or Password is incorrect";
         }
     }
 }

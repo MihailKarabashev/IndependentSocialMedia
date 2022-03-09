@@ -8,9 +8,11 @@
     using IndependentSocialApp.Data.Models;
     using IndependentSocialApp.Data.Repositories;
     using IndependentSocialApp.Data.Seeding;
+    using IndependentSocialApp.Services;
     using IndependentSocialApp.Services.Data;
     using IndependentSocialApp.Services.Mapping;
     using IndependentSocialApp.Services.Messaging;
+    using IndependentSocialApp.Web.Infrastructure;
     using IndependentSocialApp.Web.ViewModels;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
@@ -46,27 +48,7 @@
 
             services.AddSingleton(this.configuration);
 
-            var key = Encoding.ASCII.GetBytes(this.configuration["ApplicationSettings:Secret"]);
-
-            services
-                .AddAuthentication(x =>
-                {
-                    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(x =>
-                {
-                    x.RequireHttpsMetadata = false;
-                    x.SaveToken = true;
-                    x.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(key),
-                        ValidateIssuer = false,
-                        ValidateAudience = false
-                    };
-                });
-
+            services.AddJwtAuthentication(services.GetApplicationSettings(this.configuration));
 
             // Data repositories
             services.AddScoped(typeof(IDeletableEntityRepository<>), typeof(EfDeletableEntityRepository<>));

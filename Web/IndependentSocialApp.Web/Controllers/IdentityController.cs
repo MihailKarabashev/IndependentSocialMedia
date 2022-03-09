@@ -24,9 +24,9 @@
             this._userManager = userManager;
         }
 
-        //throw exception for IdentityOptionsProvider
         [HttpPost]
         [AllowAnonymous]
+        [Route(nameof(Register))]
         public async Task<ActionResult> Register(RegisterRequestModel model)
         {
             await this.ValidateRegisterModel(model);
@@ -39,6 +39,21 @@
             await this._identityService.RegisterAsync(model);
 
             return this.StatusCode(201);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route(nameof(Login))]
+        public async Task<ActionResult<LoginResponseModel>> Login(LoginRequestModel model)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.BadRequest(this.ModelState);
+            }
+
+            var token = await this._identityService.LoginAsync(model);
+
+            return this.Ok(token);
         }
 
         private async Task ValidateRegisterModel(RegisterRequestModel model)
