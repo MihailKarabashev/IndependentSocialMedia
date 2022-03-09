@@ -21,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Data\IndependentSocialApp.Data.Common\IndependentSocialApp.Data.Common.csproj" />
     <ProjectReference Include="..\..\Data\IndependentSocialApp.Data.Models\IndependentSocialApp.Data.Models.csproj" />
+    <ProjectReference Include="..\..\Web\IndependentSocialApp.Web.ViewModels\IndependentSocialApp.Web.ViewModels.csproj" />
     <ProjectReference Include="..\IndependentSocialApp.Services.Mapping\IndependentSocialApp.Services.Mapping.csproj" />
   </ItemGroup>
 
