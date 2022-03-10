@@ -10,6 +10,7 @@
 
     using IndependentSocialApp.Data.Common.Repositories;
     using IndependentSocialApp.Data.Models;
+    using IndependentSocialApp.Web.Common.ExecptionFactory.Auth;
     using IndependentSocialApp.Web.ViewModels.Identity;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.Extensions.Options;
@@ -69,14 +70,14 @@
 
             if (user == null)
             {
-                throw new ArgumentException(UserNotFound);
+                throw new AuthNotFoundException(UserNotFound);
             }
 
             var checkPassword = await this._userManager.CheckPasswordAsync(user, model.Password);
 
             if (!checkPassword)
             {
-                throw new ArgumentException(IncorrectEmailOrPassword);
+                throw new AuthUnAuthorizedException(IncorrectEmailOrPassword);
             }
 
             var generateToken = await this.GenerateJwtToken(user);
@@ -103,7 +104,7 @@
             // implement try/catch in global middleware
             if (!result.Succeeded)
             {
-                throw new ArgumentException($"{result.Errors}");
+                throw new AuthBadRequestException($"{result.Errors}");
             }
         }
     }
