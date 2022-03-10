@@ -5,6 +5,8 @@
         public static class Post
         {
             public const int DescriptionMaxLenght = 120;
+
+            public const string PostNotFound = "Post not found.";
         }
 
         public static class Identity
@@ -17,5 +19,6 @@
 
             public const string IncorrectEmailOrPassword = "Email or Password is incorrect";
         }
+
     }
 }

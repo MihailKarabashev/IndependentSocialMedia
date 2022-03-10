@@ -1,29 +1,24 @@
 ﻿namespace IndependentSocialApp.Web
 {
     using System.Reflection;
-    using System.Text;
     using IndependentSocialApp.Data;
     using IndependentSocialApp.Data.Common;
     using IndependentSocialApp.Data.Common.Repositories;
     using IndependentSocialApp.Data.Models;
     using IndependentSocialApp.Data.Repositories;
     using IndependentSocialApp.Data.Seeding;
-    using IndependentSocialApp.Services;
     using IndependentSocialApp.Services.Data;
     using IndependentSocialApp.Services.Mapping;
     using IndependentSocialApp.Services.Messaging;
     using IndependentSocialApp.Web.Infrastructure;
     using IndependentSocialApp.Web.Infrastructure.CustomMiddlewares;
     using IndependentSocialApp.Web.ViewModels;
-    using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-    using Microsoft.IdentityModel.Tokens;
 
     public class Startup
     {
@@ -45,6 +40,8 @@
 
             services.AddControllers();
 
+            services.AddRouting(opt => opt.LowercaseUrls = true);
+
             services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddSingleton(this.configuration);
@@ -60,8 +57,11 @@
             services.AddTransient<IEmailSender, NullMessageSender>();
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IIdentityService, IdentityService>();
+            services.AddTransient<IPostsService, PostsService>();
 
             services.AddTransient<ExceptionHandlingMiddleware>();
+
+            services.AddAutoMapper(typeof(Startup));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
