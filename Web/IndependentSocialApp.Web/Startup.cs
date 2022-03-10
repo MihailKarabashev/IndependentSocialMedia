@@ -13,6 +13,7 @@
     using IndependentSocialApp.Services.Mapping;
     using IndependentSocialApp.Services.Messaging;
     using IndependentSocialApp.Web.Infrastructure;
+    using IndependentSocialApp.Web.Infrastructure.CustomMiddlewares;
     using IndependentSocialApp.Web.ViewModels;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Builder;
@@ -59,6 +60,8 @@
             services.AddTransient<IEmailSender, NullMessageSender>();
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IIdentityService, IdentityService>();
+
+            services.AddTransient<ExceptionHandlingMiddleware>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,6 +82,8 @@
                 app.UseDeveloperExceptionPage();
                 app.UseMigrationsEndPoint();
             }
+
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
 
             app.UseHttpsRedirection();
 

@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\IndependentSocialApp.Common\IndependentSocialApp.Common.csproj" />
     <ProjectReference Include="..\..\Services\IndependentSocialApp.Services\IndependentSocialApp.Services.csproj" />
   </ItemGroup>
 
