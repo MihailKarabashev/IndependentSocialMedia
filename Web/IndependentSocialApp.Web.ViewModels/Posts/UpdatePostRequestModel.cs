@@ -1,6 +1,6 @@
 ﻿namespace IndependentSocialApp.Web.ViewModels.Posts
 {
-    public class CreatePostRequestModel : BasePostRequestModel
+    public class UpdatePostRequestModel : BasePostRequestModel
     {
     }
 }

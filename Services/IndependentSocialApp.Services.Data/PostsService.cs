@@ -1,5 +1,7 @@
 ﻿namespace IndependentSocialApp.Services.Data
 {
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using IndependentSocialApp.Common.ExecptionFactory.Others;
@@ -34,13 +36,51 @@
             return post;
         }
 
+        public async Task DeleteAsync(int id, string userId)
+        {
+            var post = this.FindById(id, userId);
+
+            post.ModifiedOn = DateTime.UtcNow;
+            post.IsDeleted = true;
+
+            this._postsRepository.Update(post);
+            await this._postsRepository.SaveChangesAsync();
+        }
+
+        public async Task EditAsync(int id, string userId, UpdatePostRequestModel model)
+        {
+            var post = this.FindById(id, userId);
+
+            post.ImageUrl = model.ImageUrl;
+            post.Description = model.Description;
+
+            this._postsRepository.Update(post);
+            await this._postsRepository.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<T>> GetAllAsync<T>()
+        {
+            return await this._postsRepository
+                 .AllAsNoTracking()
+                 .Where(x => !x.IsDeleted)
+                 .To<T>()
+                 .ToListAsync();
+        }
+
         public async Task<T> GetByIdAsync<T>(int id)
         {
             return await this._postsRepository
                 .AllAsNoTracking()
-                .Where(x => x.Id == id)
+                .Where(x => x.Id == id && !x.IsDeleted)
                 .To<T>()
                 .FirstOrDefaultAsync() ?? throw new NotFoundException(PostNotFound);
         }
+
+
+
+        private Post FindById(int id, string userId)
+            => this._postsRepository.AllAsNoTracking()
+            .FirstOrDefault(x => x.Id == id && x.ApplicationUserId == userId && !x.IsDeleted)
+            ?? throw new NotFoundException(PostNotFound);
     }
 }
