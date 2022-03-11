@@ -13,9 +13,9 @@
 
         Task<IEnumerable<T>> GetAllAsync<T>();
 
-        Task DeleteAsync(int id, string userId);
+        Task<bool> DeleteAsync(int id, string userId);
 
-        Task EditAsync(int id, string userId, UpdatePostRequestModel model);
+        Task<bool> EditAsync(int id, string userId, UpdatePostRequestModel model);
 
     }
 }

@@ -36,7 +36,7 @@
             return post;
         }
 
-        public async Task DeleteAsync(int id, string userId)
+        public async Task<bool> DeleteAsync(int id, string userId)
         {
             var post = this.FindById(id, userId);
 
@@ -44,10 +44,12 @@
             post.IsDeleted = true;
 
             this._postsRepository.Update(post);
-            await this._postsRepository.SaveChangesAsync();
+            var count = await this._postsRepository.SaveChangesAsync();
+
+            return this.FailOrSuccess(count);
         }
 
-        public async Task EditAsync(int id, string userId, UpdatePostRequestModel model)
+        public async Task<bool> EditAsync(int id, string userId, UpdatePostRequestModel model)
         {
             var post = this.FindById(id, userId);
 
@@ -55,7 +57,9 @@
             post.Description = model.Description;
 
             this._postsRepository.Update(post);
-            await this._postsRepository.SaveChangesAsync();
+            var count = await this._postsRepository.SaveChangesAsync();
+
+            return this.FailOrSuccess(count);
         }
 
         public async Task<IEnumerable<T>> GetAllAsync<T>()
@@ -76,11 +80,11 @@
                 .FirstOrDefaultAsync() ?? throw new NotFoundException(PostNotFound);
         }
 
-
-
         private Post FindById(int id, string userId)
             => this._postsRepository.AllAsNoTracking()
             .FirstOrDefault(x => x.Id == id && x.ApplicationUserId == userId && !x.IsDeleted)
             ?? throw new NotFoundException(PostNotFound);
+
+        private bool FailOrSuccess(int count) => count > 0 ? true : false;
     }
 }

@@ -5,21 +5,27 @@
     using System.Threading.Tasks;
     using AutoMapper;
     using IndependentSocialApp.Services.Data;
+    using IndependentSocialApp.Web.Infrastructure.NloggerExtentions;
     using IndependentSocialApp.Web.ViewModels.Posts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+
+    using static IndependentSocialApp.Common.NLoggerExceptionMessages;
 
     public class PostsController : ApiController
     {
         private readonly IPostsService _postsService;
         private readonly IMapper _mapper;
+        private readonly INloggerManager _nlog;
 
         public PostsController(
             IPostsService postsService,
-            IMapper mapper)
+            IMapper mapper,
+            INloggerManager nlog)
         {
             this._postsService = postsService;
             this._mapper = mapper;
+            this._nlog = nlog;
         }
 
         [HttpPost]
@@ -27,6 +33,7 @@
         {
             if (!this.ModelState.IsValid)
             {
+                this._nlog.LogError(this.ModelState.ToString());
                 return this.BadRequest(this.ModelState);
             }
 
@@ -36,6 +43,8 @@
 
             var postResponseModel = this._mapper.Map<PostResponseModel>(post);
 
+            this._nlog.LogInfo(SuccesfullyCreated);
+
             return this.CreatedAtAction(nameof(this.GetPost), new { id = post.Id }, postResponseModel);
         }
 
@@ -44,8 +53,7 @@
         public async Task<ActionResult<PostResponseModel>> GetPost(int id)
         {
             var post = await this._postsService.GetByIdAsync<PostResponseModel>(id);
-
-            return Ok(post);
+            return this.Ok(post);
         }
 
         [AllowAnonymous]
@@ -56,6 +64,7 @@
             {
                 Posts = await this._postsService.GetAllAsync<PostResponseModel>(),
             };
+
             return allPost;
         }
 
@@ -64,7 +73,14 @@
         {
             var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            await this._postsService.DeleteAsync(id, userId);
+            var result = await this._postsService.DeleteAsync(id, userId);
+
+            if (!result)
+            {
+                this._nlog.LogError("Problem");
+            }
+
+            this._nlog.LogInfo("OK Removed");
 
             return this.NoContent();
         }

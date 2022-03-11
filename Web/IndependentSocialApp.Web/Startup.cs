@@ -12,6 +12,7 @@
     using IndependentSocialApp.Services.Messaging;
     using IndependentSocialApp.Web.Infrastructure;
     using IndependentSocialApp.Web.Infrastructure.CustomMiddlewares;
+    using IndependentSocialApp.Web.Infrastructure.NloggerExtentions;
     using IndependentSocialApp.Web.ViewModels;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -58,6 +59,7 @@
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<IPostsService, PostsService>();
+            services.AddSingleton<INloggerManager, NloggerManager>();
 
             services.AddTransient<ExceptionHandlingMiddleware>();
 
