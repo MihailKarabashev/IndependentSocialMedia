@@ -1,30 +1,25 @@
 ﻿namespace IndependentSocialApp.Web.Controllers
 {
-    using System.Collections.Generic;
     using System.Security.Claims;
     using System.Threading.Tasks;
-    using AutoMapper;
     using IndependentSocialApp.Services.Data;
     using IndependentSocialApp.Web.Infrastructure.NloggerExtentions;
     using IndependentSocialApp.Web.ViewModels.Posts;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
-    using static IndependentSocialApp.Common.NLoggerExceptionMessages;
+    using static IndependentSocialApp.Common.NloggerMessages;
 
     public class PostsController : ApiController
     {
         private readonly IPostsService _postsService;
-        private readonly IMapper _mapper;
         private readonly INloggerManager _nlog;
 
         public PostsController(
             IPostsService postsService,
-            IMapper mapper,
             INloggerManager nlog)
         {
             this._postsService = postsService;
-            this._mapper = mapper;
             this._nlog = nlog;
         }
 
@@ -39,13 +34,12 @@
 
             var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var post = await this._postsService.CreateAsync(model, userId);
-
-            var postResponseModel = this._mapper.Map<PostResponseModel>(post);
+            await this._postsService.CreateAsync(model, userId);
 
             this._nlog.LogInfo(SuccesfullyCreated);
 
-            return this.CreatedAtAction(nameof(this.GetPost), new { id = post.Id }, postResponseModel);
+            return this.StatusCode(201);
+
         }
 
         [AllowAnonymous]
@@ -75,12 +69,13 @@
 
             var result = await this._postsService.DeleteAsync(id, userId);
 
-            if (!result)
+            if (result.Failure)
             {
-                this._nlog.LogError("Problem");
+                this._nlog.LogError(result.Error);
+                return this.BadRequest();
             }
 
-            this._nlog.LogInfo("OK Removed");
+            this._nlog.LogInfo(string.Format(SuccesfullyRemoved, id));
 
             return this.NoContent();
         }
@@ -90,7 +85,15 @@
         {
             var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            await this._postsService.EditAsync(id, userId, model);
+            var result = await this._postsService.EditAsync(id, userId, model);
+
+            if (result.Failure)
+            {
+                this._nlog.LogError(result.Error);
+                return this.BadRequest();
+            }
+
+            this._nlog.LogInfo(string.Format(SuccesfullyEdited, id));
 
             return this.NoContent();
         }

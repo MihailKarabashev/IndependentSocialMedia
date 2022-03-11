@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using IndependentSocialApp.Common;
     using IndependentSocialApp.Common.ExecptionFactory.Others;
     using IndependentSocialApp.Data.Common.Repositories;
     using IndependentSocialApp.Data.Models;
@@ -21,7 +22,7 @@
             this._postsRepository = postsRepository;
         }
 
-        public async Task<Post> CreateAsync(CreatePostRequestModel model, string userId)
+        public async Task<Result> CreateAsync(CreatePostRequestModel model, string userId)
         {
             var post = new Post
             {
@@ -33,33 +34,43 @@
             await this._postsRepository.AddAsync(post);
             await this._postsRepository.SaveChangesAsync();
 
-            return post;
+            return true;
         }
 
-        public async Task<bool> DeleteAsync(int id, string userId)
+        public async Task<Result> DeleteAsync(int id, string userId)
         {
-            var post = this.FindById(id, userId);
+            var post = this.FindByPostByandByUserId(id, userId);
+
+            if (post == null)
+            {
+                return PostNotFound;
+            }
 
             post.ModifiedOn = DateTime.UtcNow;
             post.IsDeleted = true;
 
             this._postsRepository.Update(post);
-            var count = await this._postsRepository.SaveChangesAsync();
+            await this._postsRepository.SaveChangesAsync();
 
-            return this.FailOrSuccess(count);
+            return true;
         }
 
-        public async Task<bool> EditAsync(int id, string userId, UpdatePostRequestModel model)
+        public async Task<Result> EditAsync(int id, string userId, UpdatePostRequestModel model)
         {
-            var post = this.FindById(id, userId);
+            var post = this.FindByPostByandByUserId(id, userId);
+
+            if (post == null)
+            {
+                return PostNotFound;
+            }
 
             post.ImageUrl = model.ImageUrl;
             post.Description = model.Description;
 
             this._postsRepository.Update(post);
-            var count = await this._postsRepository.SaveChangesAsync();
+            await this._postsRepository.SaveChangesAsync();
 
-            return this.FailOrSuccess(count);
+            return true;
         }
 
         public async Task<IEnumerable<T>> GetAllAsync<T>()
@@ -80,11 +91,10 @@
                 .FirstOrDefaultAsync() ?? throw new NotFoundException(PostNotFound);
         }
 
-        private Post FindById(int id, string userId)
-            => this._postsRepository.AllAsNoTracking()
-            .FirstOrDefault(x => x.Id == id && x.ApplicationUserId == userId && !x.IsDeleted)
-            ?? throw new NotFoundException(PostNotFound);
 
-        private bool FailOrSuccess(int count) => count > 0 ? true : false;
+        private Post FindByPostByandByUserId(int id, string userId)
+             => this._postsRepository
+              .AllAsNoTracking()
+              .FirstOrDefault(x => x.Id == id && x.ApplicationUserId == userId && !x.IsDeleted);
     }
 }

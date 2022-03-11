@@ -3,11 +3,14 @@
     using System.Threading.Tasks;
     using IndependentSocialApp.Data.Models;
     using IndependentSocialApp.Services.Data;
+    using IndependentSocialApp.Web.Infrastructure.NloggerExtentions;
     using IndependentSocialApp.Web.ViewModels.Identity;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
+
+    using static IndependentSocialApp.Common.NloggerMessages;
 
     using static IndependentSocialApp.Common.ModelValidations.Identity;
 
@@ -15,13 +18,16 @@
     {
         private readonly IIdentityService _identityService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly INloggerManager _nloggerManager;
 
         public IdentityController(
             IIdentityService identityService,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            INloggerManager nloggerManager)
         {
             this._identityService = identityService;
             this._userManager = userManager;
+            this._nloggerManager = nloggerManager;
         }
 
         [HttpPost]
@@ -48,10 +54,13 @@
         {
             if (!this.ModelState.IsValid)
             {
+                this._nloggerManager.LogError(LoginFailed);
                 return this.BadRequest(this.ModelState);
             }
 
             var token = await this._identityService.LoginAsync(model);
+
+            this._nloggerManager.LogInfo(LoginSucceed);
 
             return this.Ok(token);
         }

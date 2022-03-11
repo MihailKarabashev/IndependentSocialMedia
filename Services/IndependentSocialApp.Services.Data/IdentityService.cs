@@ -77,7 +77,7 @@
 
             if (!checkPassword)
             {
-                throw new AuthUnAuthorizedException(IncorrectEmailOrPassword);
+                throw new ArgumentException(IncorrectEmailOrPassword);
             }
 
             var generateToken = await this.GenerateJwtToken(user);
