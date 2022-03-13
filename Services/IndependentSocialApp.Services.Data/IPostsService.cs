@@ -7,15 +7,14 @@
 
     public interface IPostsService
     {
-        Task<Result> CreateAsync(CreatePostRequestModel model, string userId);
+        Task<PostResponseModel> CreateAsync(CreatePostRequestModel model, string userId);
 
         Task<T> GetByIdAsync<T>(int id);
 
         Task<IEnumerable<T>> GetAllAsync<T>();
 
-        Task<Result> DeleteAsync(int id, string userId);
+        Task DeleteAsync(int id, string userId);
 
-        Task<Result> EditAsync(int id, string userId, UpdatePostRequestModel model);
-
+        Task EditAsync(int id, string userId, UpdatePostRequestModel model);
     }
 }

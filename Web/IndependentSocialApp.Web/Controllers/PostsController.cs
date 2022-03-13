@@ -34,12 +34,11 @@
 
             var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            await this._postsService.CreateAsync(model, userId);
+            var mappedModel = await this._postsService.CreateAsync(model, userId);
 
             this._nlog.LogInfo(SuccesfullyCreated);
 
-            return this.StatusCode(201);
-
+            return this.CreatedAtAction(nameof(this.GetPost), new { id = mappedModel.Id }, mappedModel);
         }
 
         [AllowAnonymous]
@@ -67,13 +66,7 @@
         {
             var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var result = await this._postsService.DeleteAsync(id, userId);
-
-            if (result.Failure)
-            {
-                this._nlog.LogError(result.Error);
-                return this.BadRequest();
-            }
+            await this._postsService.DeleteAsync(id, userId);
 
             this._nlog.LogInfo(string.Format(SuccesfullyRemoved, id));
 
@@ -85,13 +78,7 @@
         {
             var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            var result = await this._postsService.EditAsync(id, userId, model);
-
-            if (result.Failure)
-            {
-                this._nlog.LogError(result.Error);
-                return this.BadRequest();
-            }
+            await this._postsService.EditAsync(id, userId, model);
 
             this._nlog.LogInfo(string.Format(SuccesfullyEdited, id));
 

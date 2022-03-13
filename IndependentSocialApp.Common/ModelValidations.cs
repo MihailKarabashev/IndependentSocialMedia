@@ -7,6 +7,8 @@
             public const int DescriptionMaxLenght = 120;
 
             public const string PostNotFound = "Post not found.";
+
+            public const string NotPostOwner = "You don't have permission to perform this post.";
         }
 
         public static class Identity

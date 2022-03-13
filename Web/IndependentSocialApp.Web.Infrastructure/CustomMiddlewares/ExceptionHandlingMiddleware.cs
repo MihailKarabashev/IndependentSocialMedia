@@ -36,6 +36,7 @@
             context.Response.StatusCode = ex switch
             {
                 NotFoundException => StatusCodes.Status404NotFound,
+                NoPermissionException => StatusCodes.Status401Unauthorized,
                 _ => StatusCodes.Status500InternalServerError,
             };
 

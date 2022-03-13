@@ -18,4 +18,12 @@ namespace IndependentSocialApp.Common.ExecptionFactory.Others
         }
     }
 
+    public class NoPermissionException : ServiceException
+    {
+        public NoPermissionException(string message)
+            :base(message)
+        {
+        }
+    }
+
 }
