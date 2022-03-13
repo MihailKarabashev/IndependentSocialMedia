@@ -37,6 +37,7 @@
             {
                 NotFoundException => StatusCodes.Status404NotFound,
                 NoPermissionException => StatusCodes.Status401Unauthorized,
+                CustomBadRequestException => StatusCodes.Status400BadRequest,
                 _ => StatusCodes.Status500InternalServerError,
             };
 

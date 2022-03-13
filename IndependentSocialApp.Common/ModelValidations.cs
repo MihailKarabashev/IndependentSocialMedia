@@ -21,6 +21,5 @@
 
             public const string IncorrectEmailOrPassword = "Email or Password is incorrect";
         }
-
     }
 }

@@ -24,19 +24,14 @@
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<ActionResult> Create([FromBody] CreatePostRequestModel model)
         {
-            if (!this.ModelState.IsValid)
-            {
-                this._nlog.LogError(this.ModelState.ToString());
-                return this.BadRequest(this.ModelState);
-            }
-
             var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
             var mappedModel = await this._postsService.CreateAsync(model, userId);
 
-            this._nlog.LogInfo(SuccesfullyCreated);
+            this._nlog.LogInfo(string.Format(SuccesfullyCreated, mappedModel.Id));
 
             return this.CreatedAtAction(nameof(this.GetPost), new { id = mappedModel.Id }, mappedModel);
         }

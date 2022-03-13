@@ -2,7 +2,7 @@
 {
     public static class NloggerMessages
     {
-        public const string CreateValidationException = "Error occured in action : {0} / contoller {1}";
+        public const string ValidationException = "Error occured in action : {0} / contoller {1}";
 
         public const string SuccesfullyCreated = "Entity Successfully Created -- {0}";
 

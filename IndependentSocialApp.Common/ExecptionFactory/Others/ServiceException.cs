@@ -26,4 +26,12 @@ namespace IndependentSocialApp.Common.ExecptionFactory.Others
         }
     }
 
+    public class CustomBadRequestException : ServiceException
+    {
+        public CustomBadRequestException(string message)
+           : base(message)
+        {
+        }
+    }
+
 }

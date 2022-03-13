@@ -11,11 +11,13 @@
     using IndependentSocialApp.Services.Mapping;
     using IndependentSocialApp.Services.Messaging;
     using IndependentSocialApp.Web.Infrastructure;
+    using IndependentSocialApp.Web.Infrastructure.CustomFilters;
     using IndependentSocialApp.Web.Infrastructure.CustomMiddlewares;
     using IndependentSocialApp.Web.Infrastructure.NloggerExtentions;
     using IndependentSocialApp.Web.ViewModels;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -39,7 +41,13 @@
             services.AddDefaultIdentity<ApplicationUser>(IdentityOptionsProvider.GetIdentityOptions)
                 .AddRoles<ApplicationRole>().AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddControllers();
+            services.AddControllers(
+                options => options.Filters.Add<ValidateModelStateFilter>());
+
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
 
             services.AddRouting(opt => opt.LowercaseUrls = true);
 
@@ -60,6 +68,7 @@
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<IPostsService, PostsService>();
             services.AddSingleton<INloggerManager, NloggerManager>();
+
 
             services.AddTransient<ExceptionHandlingMiddleware>();
         }
