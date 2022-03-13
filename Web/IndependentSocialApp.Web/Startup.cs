@@ -2,22 +2,13 @@
 {
     using System.Reflection;
     using IndependentSocialApp.Data;
-    using IndependentSocialApp.Data.Common;
-    using IndependentSocialApp.Data.Common.Repositories;
-    using IndependentSocialApp.Data.Models;
-    using IndependentSocialApp.Data.Repositories;
     using IndependentSocialApp.Data.Seeding;
-    using IndependentSocialApp.Services.Data;
     using IndependentSocialApp.Services.Mapping;
-    using IndependentSocialApp.Services.Messaging;
     using IndependentSocialApp.Web.Infrastructure;
-    using IndependentSocialApp.Web.Infrastructure.CustomFilters;
     using IndependentSocialApp.Web.Infrastructure.CustomMiddlewares;
-    using IndependentSocialApp.Web.Infrastructure.NloggerExtentions;
     using IndependentSocialApp.Web.ViewModels;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
-    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
@@ -35,42 +26,15 @@
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(
-                options => options.UseSqlServer(this.configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddDefaultIdentity<ApplicationUser>(IdentityOptionsProvider.GetIdentityOptions)
-                .AddRoles<ApplicationRole>().AddEntityFrameworkStores<ApplicationDbContext>();
-
-            services.AddControllers(
-                options => options.Filters.Add<ValidateModelStateFilter>());
-
-            services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-            });
-
-            services.AddRouting(opt => opt.LowercaseUrls = true);
-
-            services.AddDatabaseDeveloperPageExceptionFilter();
-
-            services.AddSingleton(this.configuration);
-
-            services.AddJwtAuthentication(services.GetApplicationSettings(this.configuration));
-
-            // Data repositories
-            services.AddScoped(typeof(IDeletableEntityRepository<>), typeof(EfDeletableEntityRepository<>));
-            services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>));
-            services.AddScoped<IDbQueryRunner, DbQueryRunner>();
-
-            // Application services
-            services.AddTransient<IEmailSender, NullMessageSender>();
-            services.AddTransient<ISettingsService, SettingsService>();
-            services.AddTransient<IIdentityService, IdentityService>();
-            services.AddTransient<IPostsService, PostsService>();
-            services.AddSingleton<INloggerManager, NloggerManager>();
-
-
-            services.AddTransient<ExceptionHandlingMiddleware>();
+            services
+                .AddDataBaseConfigurations(this.configuration)
+                .AddControllersWithFilters()
+                .AddConfigurationForApiModelState()
+                .AddRouting(opt => opt.LowercaseUrls = true)
+                .AddSingleton(this.configuration)
+                .AddDatabaseDeveloperPageExceptionFilter()
+                .AddJwtAuthentication(services.GetApplicationSettings(this.configuration))
+                .AddBuisnessServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
