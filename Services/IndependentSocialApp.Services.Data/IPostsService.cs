@@ -11,7 +11,7 @@
 
         Task<T> GetByIdAsync<T>(int id);
 
-        Task<IEnumerable<T>> GetAllAsync<T>();
+        Task<IEnumerable<T>> GetAllAsync<T>(PostParams model);
 
         Task DeleteAsync(int id, string userId);
 

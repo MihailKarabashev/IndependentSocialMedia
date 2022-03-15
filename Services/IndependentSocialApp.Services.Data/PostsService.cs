@@ -61,11 +61,13 @@
 
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync<T>()
+        public async Task<IEnumerable<T>> GetAllAsync<T>(PostParams model)
         {
             return await this._postsRepository
                  .AllAsNoTracking()
                  .Where(x => !x.IsDeleted)
+                 .Skip((model.PageNumber - 1) * model.PageSize)
+                 .Take(model.PageSize)
                  .To<T>()
                  .ToListAsync();
         }

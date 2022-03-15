@@ -21,5 +21,17 @@
 
             public const string IncorrectEmailOrPassword = "Email or Password is incorrect";
         }
+
+        public static class Profile
+        {
+            public const int NameMaxLenght = 20;
+
+            public const int BiograpyMaxLenght = 120;
+        }
+
+        public static class Comment
+        {
+            public const int ContentMaxLenght = 120;
+        }
     }
 }

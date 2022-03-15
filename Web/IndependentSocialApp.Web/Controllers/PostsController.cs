@@ -46,11 +46,11 @@
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<AllPostResponseModel>> GetAllPosts()
+        public async Task<ActionResult<AllPostResponseModel>> GetAllPosts([FromQuery] PostParams model)
         {
             var allPost = new AllPostResponseModel
             {
-                Posts = await this._postsService.GetAllAsync<PostResponseModel>(),
+                Posts = await this._postsService.GetAllAsync<PostResponseModel>(model),
             };
 
             return allPost;

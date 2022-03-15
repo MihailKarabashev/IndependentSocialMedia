@@ -19,6 +19,8 @@ namespace IndependentSocialApp.Data.Models
             this.Posts = new HashSet<Post>();
         }
 
+        public Profile Profile { get; set; }
+
         // Audit info
         public DateTime CreatedOn { get; set; }
 
