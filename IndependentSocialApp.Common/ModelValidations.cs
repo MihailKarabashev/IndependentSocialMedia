@@ -34,6 +34,8 @@
         public static class Comment
         {
             public const int ContentMaxLenght = 120;
+
+            public const string CommentNotFound = "Comment not found.";
         }
     }
 }

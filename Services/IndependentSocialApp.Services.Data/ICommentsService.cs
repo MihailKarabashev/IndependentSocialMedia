@@ -6,6 +6,10 @@
 
     public interface ICommentsService
     {
-        Task<CreateCommentResponseModel> CreateAsync(CreateCommentRequestModel model, string userId);
+        Task<CommentResponseModel> CreateAsync(CreateCommentRequestModel model, string userId);
+
+        Task DeleteOwnCommentAsync(int commentId, string userId);
+
+        Task EditAsync(UpdateCommentRequestModel model, string userId,int id);
     }
 }

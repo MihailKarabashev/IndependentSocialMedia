@@ -3,7 +3,7 @@
     using IndependentSocialApp.Data.Models;
     using IndependentSocialApp.Services.Mapping;
 
-    public class CreateCommentResponseModel : IMapFrom<Comment>
+    public class CommentResponseModel : IMapFrom<Comment>
     {
         public int Id { get; set; }
 

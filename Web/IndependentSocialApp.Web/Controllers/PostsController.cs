@@ -1,7 +1,7 @@
 ﻿namespace IndependentSocialApp.Web.Controllers
 {
-    using System.Security.Claims;
     using System.Threading.Tasks;
+
     using IndependentSocialApp.Services.Data;
     using IndependentSocialApp.Web.Infrastructure.Extensions;
     using IndependentSocialApp.Web.Infrastructure.NloggerExtentions;

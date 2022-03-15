@@ -55,6 +55,7 @@
 
             post.ImageUrl = model.ImageUrl;
             post.Description = model.Description;
+            post.ModifiedOn = DateTime.UtcNow;
 
             this._postsRepository.Update(post);
             await this._postsRepository.SaveChangesAsync();
