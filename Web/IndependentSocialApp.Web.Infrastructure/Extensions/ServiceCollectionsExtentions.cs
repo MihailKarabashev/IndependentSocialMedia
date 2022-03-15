@@ -13,6 +13,7 @@
     using IndependentSocialApp.Web.Infrastructure.CustomMiddlewares;
     using IndependentSocialApp.Web.Infrastructure.NloggerExtentions;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
@@ -41,6 +42,25 @@
                         IssuerSigningKey = new SymmetricSecurityKey(key),
                         ValidateIssuer = false,
                         ValidateAudience = false,
+                    };
+                    x.Events = new JwtBearerEvents
+                    {
+                        OnChallenge = async context =>
+                        {
+                            context.HandleResponse();
+
+                            context.Response.StatusCode = 401;
+                            context.Response.Headers.Append("UnAuthorized", "User");
+                            context.Response.ContentType = "application/json";
+
+                            var errorResponse = new ErrorDetails
+                            {
+                                Message = "You are not authorized !",
+                                StatusCode = context.Response.StatusCode,
+                            };
+
+                            await context.Response.WriteAsync(errorResponse.ToString());
+                        },
                     };
                 });
 

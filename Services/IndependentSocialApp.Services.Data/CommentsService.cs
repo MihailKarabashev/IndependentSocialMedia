@@ -31,11 +31,6 @@ namespace IndependentSocialApp.Services.Data
         {
             var user = await this.usersService.FindUserAsync(userId);
 
-            if (user == null)
-            {
-                throw new AuthUnAuthorizedException(UnauthorizedAccess);
-            }
-
             var post = this.postsService.FindPostById(model.PostId);
 
             if (post == null)
