@@ -81,9 +81,14 @@
                 .FirstOrDefaultAsync() ?? throw new NotFoundException(PostNotFound);
         }
 
+        public Post FindPostById(int id)
+             => this._postsRepository
+              .AllAsNoTracking()
+              .FirstOrDefault(x => x.Id == id && !x.IsDeleted);
+
         private Post ValidateUserPostCredentials(int id, string userId)
         {
-            var post = this.FindByPostByandByUserId(id);
+            var post = this.FindPostById(id);
 
             if (post == null)
             {
@@ -99,10 +104,5 @@
 
             return post;
         }
-
-        private Post FindByPostByandByUserId(int id)
-             => this._postsRepository
-              .AllAsNoTracking()
-              .FirstOrDefault(x => x.Id == id && !x.IsDeleted);
     }
 }

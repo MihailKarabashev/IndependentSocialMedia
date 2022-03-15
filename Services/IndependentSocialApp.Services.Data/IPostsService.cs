@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using IndependentSocialApp.Common;
+    using IndependentSocialApp.Data.Models;
     using IndependentSocialApp.Web.ViewModels.Posts;
 
     public interface IPostsService
@@ -10,6 +10,8 @@
         Task<PostResponseModel> CreateAsync(CreatePostRequestModel model, string userId);
 
         Task<T> GetByIdAsync<T>(int id);
+
+        Post FindPostById(int id);
 
         Task<IEnumerable<T>> GetAllAsync<T>(PostParams model);
 

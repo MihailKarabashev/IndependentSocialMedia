@@ -20,6 +20,8 @@
             public const string UserNotFound = "User with this email is not found";
 
             public const string IncorrectEmailOrPassword = "Email or Password is incorrect";
+
+            public const string UnauthorizedAccess = "You don't have permission to perform this section.";
         }
 
         public static class Profile
