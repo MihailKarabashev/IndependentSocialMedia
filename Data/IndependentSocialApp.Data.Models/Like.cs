@@ -20,6 +20,5 @@
         public Comment Comment { get; set; }
 
         public bool IsLike { get; set; }
-
     }
 }

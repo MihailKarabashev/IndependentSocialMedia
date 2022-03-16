@@ -1,11 +1,12 @@
 ﻿namespace IndependentSocialApp.Web.ViewModels.Posts
 {
     using System.Collections.Generic;
+
     using AutoMapper;
     using IndependentSocialApp.Data.Models;
     using IndependentSocialApp.Services.Mapping;
 
-    public class PostResponseModel : IMapFrom<Post> , IHaveCustomMappings
+    public class PostResponseModel : IMapFrom<Post>, IHaveCustomMappings
     {
         public int Id { get; set; }
 

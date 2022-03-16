@@ -14,5 +14,7 @@
 
         public const string LoginSucceed = "Login Succeed";
 
+        public const string SuccesfullyRetrived = "Succesfully retrived -- {0}";
+
     }
 }

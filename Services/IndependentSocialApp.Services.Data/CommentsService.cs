@@ -1,18 +1,21 @@
-﻿using IndependentSocialApp.Common.ExecptionFactory.Others;
-using IndependentSocialApp.Data.Common.Repositories;
-using IndependentSocialApp.Data.Models;
-using IndependentSocialApp.Services.Mapping;
-using IndependentSocialApp.Web.Common.ExecptionFactory.Auth;
-using IndependentSocialApp.Web.ViewModels.Comments;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using static IndependentSocialApp.Common.ModelValidations.Identity;
-using static IndependentSocialApp.Common.ModelValidations.Comment;
-using static IndependentSocialApp.Common.ModelValidations.Post;
-using System;
-
-namespace IndependentSocialApp.Services.Data
+﻿namespace IndependentSocialApp.Services.Data
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+
+    using IndependentSocialApp.Common.ExecptionFactory.Others;
+    using IndependentSocialApp.Data.Common.Repositories;
+    using IndependentSocialApp.Data.Models;
+    using IndependentSocialApp.Services.Mapping;
+    using IndependentSocialApp.Web.Common.ExecptionFactory.Auth;
+    using IndependentSocialApp.Web.ViewModels.Comments;
+    using Microsoft.EntityFrameworkCore;
+
+    using static IndependentSocialApp.Common.ModelValidations.Comment;
+    using static IndependentSocialApp.Common.ModelValidations.Identity;
+    using static IndependentSocialApp.Common.ModelValidations.Post;
 
     public class CommentsService : ICommentsService
     {
@@ -75,6 +78,24 @@ namespace IndependentSocialApp.Services.Data
 
             this.commentsRepo.Update(comment);
             await this.commentsRepo.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<T>> GetAllCommentsByPostIdAsync<T>(CommentParams model, int postId)
+        {
+            return await this.commentsRepo.AllAsNoTracking()
+                .Where(x => x.PostId == postId && !x.IsDeleted)
+                .Skip((model.PageNumber - 1) * model.PageSize)
+                .Take(model.PageSize)
+                .To<T>().ToListAsync() ?? throw new NotFoundException(PostNotFound);
+        }
+
+        public async Task<T> GetByIdAsync<T>(int id)
+        {
+            return await this.commentsRepo
+                 .AllAsNoTracking()
+                 .Where(x => x.Id == id && !x.IsDeleted)
+                 .To<T>()
+                 .FirstOrDefaultAsync() ?? throw new NotFoundException(CommentNotFound);
         }
 
         private async Task<Comment> ValidateCommentCredentials(int commentId, string userId)

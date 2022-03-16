@@ -69,6 +69,9 @@
                  .Where(x => !x.IsDeleted)
                  .Skip((model.PageNumber - 1) * model.PageSize)
                  .Take(model.PageSize)
+                 .Include(c => c.Comments)
+                 .OrderByDescending(c => c.CreatedOn)
+                 .Take(10)
                  .To<T>()
                  .ToListAsync();
         }

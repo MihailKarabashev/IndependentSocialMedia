@@ -4,7 +4,7 @@
     using IndependentSocialApp.Data.Models;
     using IndependentSocialApp.Services.Mapping;
 
-    public class PostCommentModel : IMapFrom<Comment> , IHaveCustomMappings
+    public class PostCommentModel : IMapFrom<Comment>, IHaveCustomMappings
     {
         public int Id { get; set; }
 

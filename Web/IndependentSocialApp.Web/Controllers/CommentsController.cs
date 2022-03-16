@@ -1,11 +1,13 @@
 ﻿namespace IndependentSocialApp.Web.Controllers
 {
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     using IndependentSocialApp.Services.Data;
     using IndependentSocialApp.Web.Infrastructure.Extensions;
     using IndependentSocialApp.Web.Infrastructure.NloggerExtentions;
     using IndependentSocialApp.Web.ViewModels.Comments;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
 
     using static IndependentSocialApp.Common.NloggerMessages;
@@ -34,10 +36,24 @@
             return this.CreatedAtAction(nameof(this.GetById), new { id = commentModel.Id }, commentModel);
         }
 
+        [HttpGet]
+        [Route("GetAll/{id}")]
+        [AllowAnonymous]
+        public async Task<IEnumerable<CommentResponseModel>> GetAllComments([FromQuery] CommentParams model, int id)
+        {
+            var comments = await this.commentsService.GetAllCommentsByPostIdAsync<CommentResponseModel>(model, id);
+
+            return comments;
+        }
+
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult> GetById(int id)
         {
-            return this.Ok();
+            var comment = await this.commentsService.GetByIdAsync<CommentResponseModel>(id);
+
+            this.nlog.LogInfo(string.Format(SuccesfullyRetrived, id));
+            return this.Ok(comment);
         }
 
         [HttpDelete("{id}")]
@@ -53,11 +69,11 @@
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(UpdateCommentRequestModel model ,int id)
+        public async Task<ActionResult> Update(UpdateCommentRequestModel model, int id)
         {
             var userId = this.User.GetId();
 
-            await this.commentsService.EditAsync(model, userId , id);
+            await this.commentsService.EditAsync(model, userId, id);
 
             this.nlog.LogInfo(string.Format(SuccesfullyEdited, id));
 
