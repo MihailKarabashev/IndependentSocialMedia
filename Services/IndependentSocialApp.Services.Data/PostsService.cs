@@ -55,17 +55,20 @@
 
             post.ImageUrl = model.ImageUrl;
             post.Description = model.Description;
+            post.ModifiedOn = DateTime.UtcNow;
 
             this._postsRepository.Update(post);
             await this._postsRepository.SaveChangesAsync();
 
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync<T>()
+        public async Task<IEnumerable<T>> GetAllAsync<T>(PostParams model)
         {
             return await this._postsRepository
                  .AllAsNoTracking()
                  .Where(x => !x.IsDeleted)
+                 .Skip((model.PageNumber - 1) * model.PageSize)
+                 .Take(model.PageSize)
                  .To<T>()
                  .ToListAsync();
         }
@@ -79,9 +82,14 @@
                 .FirstOrDefaultAsync() ?? throw new NotFoundException(PostNotFound);
         }
 
+        public Post FindPostById(int id)
+             => this._postsRepository
+              .AllAsNoTracking()
+              .FirstOrDefault(x => x.Id == id && !x.IsDeleted);
+
         private Post ValidateUserPostCredentials(int id, string userId)
         {
-            var post = this.FindByPostByandByUserId(id);
+            var post = this.FindPostById(id);
 
             if (post == null)
             {
@@ -97,10 +105,5 @@
 
             return post;
         }
-
-        private Post FindByPostByandByUserId(int id)
-             => this._postsRepository
-              .AllAsNoTracking()
-              .FirstOrDefault(x => x.Id == id && !x.IsDeleted);
     }
 }

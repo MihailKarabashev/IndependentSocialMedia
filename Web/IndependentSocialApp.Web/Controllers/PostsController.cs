@@ -1,8 +1,9 @@
 ﻿namespace IndependentSocialApp.Web.Controllers
 {
-    using System.Security.Claims;
     using System.Threading.Tasks;
+
     using IndependentSocialApp.Services.Data;
+    using IndependentSocialApp.Web.Infrastructure.Extensions;
     using IndependentSocialApp.Web.Infrastructure.NloggerExtentions;
     using IndependentSocialApp.Web.ViewModels.Posts;
     using Microsoft.AspNetCore.Authorization;
@@ -27,7 +28,7 @@
         [AllowAnonymous]
         public async Task<ActionResult> Create([FromBody] CreatePostRequestModel model)
         {
-            var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = this.User.GetId();
 
             var mappedModel = await this._postsService.CreateAsync(model, userId);
 
@@ -46,11 +47,11 @@
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<ActionResult<AllPostResponseModel>> GetAllPosts()
+        public async Task<ActionResult<AllPostResponseModel>> GetAllPosts([FromQuery] PostParams model)
         {
             var allPost = new AllPostResponseModel
             {
-                Posts = await this._postsService.GetAllAsync<PostResponseModel>(),
+                Posts = await this._postsService.GetAllAsync<PostResponseModel>(model),
             };
 
             return allPost;
@@ -59,7 +60,7 @@
         [HttpDelete("{id}")]
         public async Task<ActionResult> Remove(int id)
         {
-            var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = this.User.GetId();
 
             await this._postsService.DeleteAsync(id, userId);
 
@@ -71,7 +72,7 @@
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, UpdatePostRequestModel model)
         {
-            var userId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var userId = this.User.GetId();
 
             await this._postsService.EditAsync(id, userId, model);
 
