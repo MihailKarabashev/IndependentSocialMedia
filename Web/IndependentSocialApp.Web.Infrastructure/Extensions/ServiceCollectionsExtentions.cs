@@ -86,6 +86,7 @@
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<IPostsService, PostsService>();
             services.AddTransient<IUsersService, UsersService>();
+            services.AddTransient<ILikesService, LikesService>();
             services.AddTransient<ICommentsService, CommentsService>();
             services.AddSingleton<INloggerManager, NloggerManager>();
             services.AddTransient<ExceptionHandlingMiddleware>();
