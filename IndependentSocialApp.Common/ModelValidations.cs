@@ -9,6 +9,8 @@
             public const string PostNotFound = "Post not found.";
 
             public const string NotPostOwner = "You don't have permission to perform this post.";
+
+            public const string LikeBeforeUnlike = "You can't unlike, because you didn't like it .";
         }
 
         public static class Identity

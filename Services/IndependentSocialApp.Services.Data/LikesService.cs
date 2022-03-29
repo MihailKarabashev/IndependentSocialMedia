@@ -1,12 +1,13 @@
 ﻿namespace IndependentSocialApp.Services.Data
 {
+    using System.Linq;
     using System.Threading.Tasks;
 
     using IndependentSocialApp.Common.ExecptionFactory.Others;
     using IndependentSocialApp.Data.Common.Repositories;
     using IndependentSocialApp.Data.Models;
-    using IndependentSocialApp.Services.Mapping;
     using IndependentSocialApp.Web.ViewModels.Likes;
+    using Microsoft.EntityFrameworkCore;
 
     using static IndependentSocialApp.Common.ModelValidations.Comment;
     using static IndependentSocialApp.Common.ModelValidations.Post;
@@ -34,21 +35,41 @@
         {
             var user = await this.usersService.FindUserAsync(userId);
 
-            var comment = await this.commentsService.GetByIdAsync<Comment>(model.Id);
+            var comment = this.IsValidComment(model);
 
-            if (comment == null)
+            var existedLike = comment.Likes.FirstOrDefault(x => x.CommentId == model.Id);
+
+            if (existedLike != null)
             {
-                throw new NotFoundException(CommentNotFound);
+                existedLike.IsCommentLike = true;
+                this.likesRepo.Update(existedLike);
+            }
+            else
+            {
+                var like = new Like()
+                {
+                    ApplicationUserId = user.Id,
+                    CommentId = comment.Id,
+                    IsCommentLike = true,
+                };
+
+                await this.likesRepo.AddAsync(like);
             }
 
-            var like = new Like()
-            {
-                ApplicationUserId = user.Id,
-                CommentId = comment.Id,
-                IsLike = true,
-            };
+            await this.likesRepo.SaveChangesAsync();
+        }
 
-            await this.likesRepo.AddAsync(like);
+        public async Task CreateCommentUnlikeAsync(LikeRequestModel model, string userId)
+        {
+            var user = await this.usersService.FindUserAsync(userId);
+
+            var comment = this.IsValidComment(model);
+
+            var like = await this.FindLike(user, comment.Id, default);
+
+            like.IsCommentLike = false;
+
+            this.likesRepo.Update(like);
             await this.likesRepo.SaveChangesAsync();
         }
 
@@ -56,22 +77,84 @@
         {
             var user = await this.usersService.FindUserAsync(userId);
 
-            var post = await this.postsService.GetByIdAsync<Post>(model.Id);
+            var post = this.IsValidPost(model);
+
+            var existedLike = post.Likes.FirstOrDefault(x => x.PostId == model.Id);
+
+            if (existedLike != null)
+            {
+                existedLike.IsPostLike = true;
+                this.likesRepo.Update(existedLike);
+            }
+            else
+            {
+                var like = new Like()
+                {
+                    ApplicationUserId = user.Id,
+                    PostId = post.Id,
+                    IsPostLike = true,
+                };
+
+                await this.likesRepo.AddAsync(like);
+            }
+
+            await this.likesRepo.SaveChangesAsync();
+        }
+
+        public async Task CreatePostUnlikeAsync(LikeRequestModel model, string userId)
+        {
+            var user = await this.usersService.FindUserAsync(userId);
+
+            var post = this.IsValidPost(model);
+
+            var like = await this.FindLike(user, default, post.Id);
+
+            like.IsPostLike = false;
+
+            this.likesRepo.Update(like);
+            await this.likesRepo.SaveChangesAsync();
+        }
+
+        private Post IsValidPost(LikeRequestModel model)
+        {
+            var post = this.postsService.FindPostById(model.Id);
 
             if (post == null)
             {
                 throw new NotFoundException(PostNotFound);
             }
 
-            var like = new Like()
-            {
-                ApplicationUserId = user.Id,
-                PostId = post.Id,
-                IsLike = true,
-            };
+            return post;
+        }
 
-            await this.likesRepo.AddAsync(like);
-            await this.likesRepo.SaveChangesAsync();
+        private Comment IsValidComment(LikeRequestModel model)
+        {
+            var comment = this.commentsService.FindCommentById(model.Id);
+
+            if (comment == null)
+            {
+                throw new NotFoundException(CommentNotFound);
+            }
+
+            return comment;
+        }
+
+        private async Task<Like> FindLike(ApplicationUser user, int commentId = 0, int postId = 0)
+        {
+            var like = commentId == 0
+                     ? await this.likesRepo
+                .AllAsNoTracking()
+                .FirstOrDefaultAsync(x => x.PostId == postId && x.ApplicationUser == user)
+                : await this.likesRepo
+                .AllAsNoTracking()
+                .FirstOrDefaultAsync(x => x.CommentId == commentId && x.ApplicationUser == user);
+
+            if (like == null)
+            {
+                throw new NotFoundException(LikeBeforeUnlike);
+            }
+
+            return like;
         }
     }
 }

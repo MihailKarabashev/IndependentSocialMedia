@@ -19,6 +19,8 @@
 
         public Comment Comment { get; set; }
 
-        public bool IsLike { get; set; }
+        public bool IsCommentLike { get; set; }
+
+        public bool IsPostLike { get; set; }
     }
 }

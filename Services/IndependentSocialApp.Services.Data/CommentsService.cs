@@ -69,7 +69,7 @@
             await this.commentsRepo.SaveChangesAsync();
         }
 
-        public async Task EditAsync(UpdateCommentRequestModel model, string userId , int id)
+        public async Task EditAsync(UpdateCommentRequestModel model, string userId, int id)
         {
             var comment = await this.ValidateCommentCredentials(id, userId);
 
@@ -79,6 +79,12 @@
             this.commentsRepo.Update(comment);
             await this.commentsRepo.SaveChangesAsync();
         }
+
+        public Comment FindCommentById(int id)
+           => this.commentsRepo
+              .AllAsNoTracking()
+             .Include(x => x.Likes)
+              .FirstOrDefault(x => x.Id == id && !x.IsDeleted);
 
         public async Task<IEnumerable<T>> GetAllCommentsByPostIdAsync<T>(CommentParams model, int postId)
         {

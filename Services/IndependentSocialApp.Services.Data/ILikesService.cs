@@ -8,6 +8,10 @@
     {
         Task CreatePostLikeAsync(LikeRequestModel model, string userId);
 
+        Task CreatePostUnlikeAsync(LikeRequestModel model, string userId);
+
         Task CreateCommentLikeAsync(LikeRequestModel model, string userId);
+
+        Task CreateCommentUnlikeAsync(LikeRequestModel model, string userId);
     }
 }
