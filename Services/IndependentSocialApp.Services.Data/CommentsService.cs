@@ -33,7 +33,7 @@
             this.postsService = postsService;
         }
 
-        public async Task<CommentResponseModel> CreateAsync(CreateCommentRequestModel model, string userId)
+        public async Task<CommentResponseModel> CreateAsync(CreateCommentRequestModel model, string userId, int? parentId = null)
         {
             var user = await this.usersService.FindUserAsync(userId);
 
@@ -48,6 +48,7 @@
             {
                 ApplicationUserId = user.Id,
                 PostId = post.Id,
+                ParentId = model.ParentId.Value,
                 Content = model.Content,
             };
 
@@ -102,6 +103,24 @@
                  .Where(x => x.Id == id && !x.IsDeleted)
                  .To<T>()
                  .FirstOrDefaultAsync() ?? throw new NotFoundException(CommentNotFound);
+        }
+
+        public bool IsInPostId(int commentId, int postId)
+        {
+            var commentPostId = this.commentsRepo
+                .AllAsNoTracking()
+                .Where(x => x.Id == commentId)
+                .Select(x => x.PostId)
+                .FirstOrDefault();
+
+            var isSamePost = commentPostId == postId;
+
+            if (!isSamePost)
+            {
+                throw new NotFoundException(CantCommentThisPost);
+            }
+
+            return true;
         }
 
         private async Task<Comment> ValidateCommentCredentials(int commentId, string userId)

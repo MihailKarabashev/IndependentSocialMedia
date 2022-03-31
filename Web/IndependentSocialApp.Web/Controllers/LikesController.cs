@@ -26,7 +26,6 @@
 
         [HttpPost]
         [Route("createlikepost")]
-        [AllowAnonymous]
         public async Task<ActionResult> CreateLikePost(LikeRequestModel model)
         {
             var userId = this.User.GetId();
@@ -40,7 +39,6 @@
 
         [HttpPost]
         [Route("createunlikepost")]
-        [AllowAnonymous]
         public async Task<ActionResult> CreateUnlikePost(LikeRequestModel model)
         {
             var userId = this.User.GetId();
@@ -54,7 +52,6 @@
 
         [HttpPost]
         [Route("createlikecomment")]
-        [AllowAnonymous]
         public async Task<ActionResult> CreateLikeComment(LikeRequestModel model)
         {
             var userId = this.User.GetId();
@@ -68,7 +65,6 @@
 
         [HttpPost]
         [Route("createunlikecomment")]
-        [AllowAnonymous]
         public async Task<ActionResult> CreateUnlikeComment(LikeRequestModel model)
         {
             var userId = this.User.GetId();

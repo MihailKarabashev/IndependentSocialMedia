@@ -9,6 +9,8 @@
         [Required]
         public int PostId { get; set; }
 
+        public int? ParentId { get; set; }
+
         [Required]
         [MaxLength(ContentMaxLenght)]
         public string Content { get; set; }

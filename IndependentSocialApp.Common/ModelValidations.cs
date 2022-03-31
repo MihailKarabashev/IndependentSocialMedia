@@ -38,6 +38,19 @@
             public const int ContentMaxLenght = 120;
 
             public const string CommentNotFound = "Comment not found.";
+
+            public const string CantCommentThisPost = "You can't comment this post.";
+        }
+
+        public static class Follow
+        {
+            public const string FollowerMustLogIn = "You need to login , before follow.";
+
+            public const string CantFindThisUser = "This user doesn't exist.";
+
+            public const string CantFollowMoreThenOneTimeOneUser = "You already follow this user.";
+
+            public const string YouDontFollowThisUser = "You dont follow thi user , and you can't unfollow him.";
         }
     }
 }
