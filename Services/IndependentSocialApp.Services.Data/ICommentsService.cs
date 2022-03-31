@@ -2,12 +2,15 @@
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
+
     using IndependentSocialApp.Data.Models;
     using IndependentSocialApp.Web.ViewModels.Comments;
 
     public interface ICommentsService
     {
-        Task<CommentResponseModel> CreateAsync(CreateCommentRequestModel model, string userId);
+        Task<CommentResponseModel> CreateAsync(CreateCommentRequestModel model, string userId, int? parentId = null);
+
+        bool IsInPostId(int commentId, int postId);
 
         Task<T> GetByIdAsync<T>(int id);
 

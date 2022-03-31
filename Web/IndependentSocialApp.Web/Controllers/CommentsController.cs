@@ -28,9 +28,16 @@
         [HttpPost]
         public async Task<ActionResult<CommentResponseModel>> Create(CreateCommentRequestModel model)
         {
+            var parentId = model.ParentId == 0 ? null : model.ParentId;
+
+            if (parentId.HasValue)
+            {
+                this.commentsService.IsInPostId(parentId.Value, model.PostId);
+            }
+
             var userId = this.User.GetId();
 
-            var commentModel = await this.commentsService.CreateAsync(model, userId);
+            var commentModel = await this.commentsService.CreateAsync(model, userId, parentId.Value);
             this.nlog.LogInfo(string.Format(SuccesfullyCreated, commentModel.Id));
 
             return this.CreatedAtAction(nameof(this.GetById), new { id = commentModel.Id }, commentModel);

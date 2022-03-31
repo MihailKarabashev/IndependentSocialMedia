@@ -6,6 +6,8 @@
 
         public const string SuccesfullyCreated = "Entity Successfully Created -- {0}";
 
+        public const string SuccesfullyFollowed = "Successfully Followed";
+
         public const string SuccesfullyUnlikedPost = "Unlike post was succesfull.";
 
         public const string SuccesfullyUnlikedComment = "Unlike comment was succesfull.";

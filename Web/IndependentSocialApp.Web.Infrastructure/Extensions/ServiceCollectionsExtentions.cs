@@ -85,6 +85,7 @@
             services.AddTransient<ISettingsService, SettingsService>();
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<IPostsService, PostsService>();
+            services.AddTransient<IFollowService, FollowService>();
             services.AddTransient<IUsersService, UsersService>();
             services.AddTransient<ILikesService, LikesService>();
             services.AddTransient<ICommentsService, CommentsService>();

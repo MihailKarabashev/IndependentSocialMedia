@@ -14,6 +14,10 @@
 
         public ApplicationUser ApplicationUser { get; set; }
 
+        public int? ParentId { get; set; }
+
+        public Comment Parent { get; set; }
+
         [Required]
         public int PostId { get; set; }
 
