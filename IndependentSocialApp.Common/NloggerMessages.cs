@@ -22,5 +22,6 @@
 
         public const string SuccesfullyRetrived = "Succesfully retrived -- {0}";
 
+        public const string FriendshipSuccessfullyAccepted = "Friendship is successfuly updated in database";
     }
 }

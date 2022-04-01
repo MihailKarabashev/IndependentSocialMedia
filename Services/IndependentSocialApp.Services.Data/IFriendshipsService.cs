@@ -6,5 +6,7 @@
     {
 
         Task SendFriendRequestAsync(string userId, string addresseeId);
+
+        Task AcceptFriendRequestAsync(string userId, string requesterId);
     }
 }

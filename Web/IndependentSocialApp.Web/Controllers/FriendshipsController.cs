@@ -32,5 +32,18 @@
 
             return this.StatusCode(201);
         }
+
+        //localhost:3030/api/friendship/accept-friendship
+        [HttpPut]
+        [Route("accept-friendship")]
+        public async Task<ActionResult> AcceptFrendship(UpdateFriendshipRequestModel friendshipModel)
+        {
+            var userId = this.User.GetId();
+
+            await this.friendshipsService.AcceptFriendRequestAsync(userId, friendshipModel.RequesterId);
+            this.nloggerManager.LogInfo(FriendshipSuccessfullyAccepted);
+
+            return this.NoContent();
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace IndependentSocialApp.Services.Data
 {
+    using System.Linq;
     using System.Threading.Tasks;
     using IndependentSocialApp.Common.ExecptionFactory.Others;
 
@@ -16,6 +17,26 @@
         public FriendshipsService(IRepository<Friendship> friendshipRepo)
         {
             this.friendshipRepo = friendshipRepo;
+        }
+
+        public async Task AcceptFriendRequestAsync(string userId, string requesterId)
+        {
+            var isFreindshipExist = await this.IsFriendshipExistAsync(userId, requesterId);
+
+            if (!isFreindshipExist) throw new CustomBadRequestException(FriendshipDoNotExist);
+
+            var friendship = await this.friendshipRepo
+                 .AllAsNoTracking()
+                 .Where(x => x.RequesterId == requesterId && x.AddresseeId == userId)
+                 .FirstOrDefaultAsync();
+
+            if (friendship.Status == FriendshipStatus.Pending)
+            {
+                friendship.Status = FriendshipStatus.Accepted;
+                this.friendshipRepo.Update(friendship);
+            }
+
+            await this.friendshipRepo.SaveChangesAsync();
         }
 
         public async Task SendFriendRequestAsync(string userId, string addresseeId)

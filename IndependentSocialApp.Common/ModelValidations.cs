@@ -58,6 +58,8 @@
             public const string FriendshipRequestAlreadySent = "Your frendship request is already sent.";
 
             public const string AddresseeIdNotFound = "Addressee with this ID is not found.";
+
+            public const string FriendshipDoNotExist = "Your request is declined. You cannot accept not exsisting friendship request.";
         }
     }
 }
