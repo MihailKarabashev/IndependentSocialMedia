@@ -1,9 +1,9 @@
 ﻿namespace IndependentSocialApp.Web.ViewModels.Comments
 {
-    using System.Collections.Generic;
-    using System.Linq;
+    using IndependentSocialApp.Data.Models;
+    using IndependentSocialApp.Services.Mapping;
 
-    public class CommentResponseModel
+    public class CommentParent : IMapFrom<Comment>
     {
         public int Id { get; set; }
 
@@ -13,10 +13,6 @@
 
         public string Content { get; set; }
 
-        public int RepliesCount => this.Parent.Count();
-
         public int LikesCount { get; set; }
-
-        public ICollection<CommentParent> Parent { get; set; }
     }
 }

@@ -16,7 +16,7 @@
 
         public int? ParentId { get; set; }
 
-        public Comment Parent { get; set; }
+        public virtual Comment Parent { get; set; }
 
         [Required]
         public int PostId { get; set; }

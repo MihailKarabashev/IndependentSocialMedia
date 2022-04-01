@@ -96,13 +96,43 @@
                 .To<T>().ToListAsync() ?? throw new NotFoundException(PostNotFound);
         }
 
-        public async Task<T> GetByIdAsync<T>(int id)
+        public async Task<CommentResponseModel> GetByIdAsync(int id)
         {
-            return await this.commentsRepo
+            var comment = await this.commentsRepo
                  .AllAsNoTracking()
                  .Where(x => x.Id == id && !x.IsDeleted)
-                 .To<T>()
+                 .Include(x => x.Likes)
                  .FirstOrDefaultAsync() ?? throw new NotFoundException(CommentNotFound);
+
+            var commentReplies = await this.commentsRepo
+                 .AllAsNoTracking()
+                 .Where(x => x.ParentId == comment.Id)
+                 .Include(x => x.Likes)
+                 .ToListAsync();
+
+            var singleCommentResponseModel = new CommentResponseModel()
+            {
+                Id = comment.Id,
+                Content = comment.Content,
+                ApplicationUserId = comment.ApplicationUserId,
+                PostId = comment.PostId,
+                LikesCount = comment.Likes.Count(),
+                Parent = new List<CommentParent>(),
+            };
+
+            foreach (var reply in commentReplies)
+            {
+                singleCommentResponseModel.Parent.Add(new CommentParent()
+                {
+                    Id = reply.Id,
+                    Content = reply.Content,
+                    ApplicationUserId = reply.ApplicationUserId,
+                    PostId = reply.PostId,
+                    LikesCount = reply.Likes.Count(),
+                });
+            }
+
+            return singleCommentResponseModel;
         }
 
         public bool IsInPostId(int commentId, int postId)

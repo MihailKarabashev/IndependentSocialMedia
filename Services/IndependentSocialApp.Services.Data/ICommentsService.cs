@@ -12,7 +12,7 @@
 
         bool IsInPostId(int commentId, int postId);
 
-        Task<T> GetByIdAsync<T>(int id);
+        Task<CommentResponseModel> GetByIdAsync(int id);
 
         Task<IEnumerable<T>> GetAllCommentsByPostIdAsync<T>(CommentParams model, int postId);
 

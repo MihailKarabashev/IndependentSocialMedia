@@ -57,7 +57,7 @@
         [AllowAnonymous]
         public async Task<ActionResult> GetById(int id)
         {
-            var comment = await this.commentsService.GetByIdAsync<CommentResponseModel>(id);
+            var comment = await this.commentsService.GetByIdAsync(id);
 
             this.nlog.LogInfo(string.Format(SuccesfullyRetrived, id));
             return this.Ok(comment);
