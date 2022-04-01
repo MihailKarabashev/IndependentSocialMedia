@@ -36,6 +36,8 @@
 
         public DbSet<Follow> Follows { get; set; }
 
+        public DbSet<Friendship> Friendships { get; set; }
+
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         public override int SaveChanges() => this.SaveChanges(true);
