@@ -31,7 +31,7 @@
 
             this.nlog.LogInfo(string.Format(SuccesfullyFollowed));
 
-            return this.StatusCode(200);
+            return this.StatusCode(201);
         }
 
         [HttpDelete]

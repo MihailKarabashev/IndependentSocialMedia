@@ -52,5 +52,12 @@
 
             public const string YouDontFollowThisUser = "You dont follow thi user , and you can't unfollow him.";
         }
+
+        public static class Friendship
+        {
+            public const string FriendshipRequestAlreadySent = "Your frendship request is already sent.";
+
+            public const string AddresseeIdNotFound = "Addressee with this ID is not found.";
+        }
     }
 }

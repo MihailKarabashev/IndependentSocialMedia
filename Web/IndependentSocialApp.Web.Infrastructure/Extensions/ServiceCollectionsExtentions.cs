@@ -88,6 +88,7 @@
             services.AddTransient<IFollowService, FollowService>();
             services.AddTransient<IUsersService, UsersService>();
             services.AddTransient<ILikesService, LikesService>();
+            services.AddTransient<IFriendshipsService, FriendshipsService>();
             services.AddTransient<ICommentsService, CommentsService>();
             services.AddSingleton<INloggerManager, NloggerManager>();
             services.AddTransient<ExceptionHandlingMiddleware>();
